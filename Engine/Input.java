@@ -19,13 +19,9 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     public final static int KEYBOARD_INPUT = 1;
     public final static int MOUSE_INPUT = 2;
 
-    private static boolean mouse_pressed = false;
-    private static boolean mouse_released = true;
-    private static boolean mouse_just_pressed = false;
-    private static boolean mouse_just_released = false;
-
     private static Vector2 mouse_position = new Vector2();
     private static Vector2 mouse_position_when_pressed = new Vector2();
+    private static Vector2 mouse_position_when_released = new Vector2();
 
     private static HashMap<String, Action> input_actions = new HashMap<String, Action>();
 
@@ -50,6 +46,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyPressed(KeyEvent e) {
         int key_code = e.getKeyCode();
+
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.keyboard_codes.length; i++) {
                 if(action.keyboard_codes[i] == key_code && !action.pressed_keys.contains(key_code) && 
@@ -62,7 +59,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
                 if(!action.was_just_pressed){
                     action.is_just_pressed = true;
                     action.was_just_pressed = true;
-                    GraphicPanel._actions_just_pressed.put(action.name, 0);
+                    GraphicsPanel.__actions_just_pressed.put(action.name, 0);
                 }
                 action.is_pressed = true;
                 action.is_released = false;
@@ -74,6 +71,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyReleased(KeyEvent e) {
         int key_code = e.getKeyCode();
+
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.keyboard_codes.length; i++) {
                 if(action.keyboard_codes[i] == key_code && action.pressed_keys.contains(key_code) && 
@@ -86,7 +84,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
                 if(!action.was_just_released){
                     action.is_just_released = true;
                     action.was_just_released = true;
-                    GraphicPanel._actions_just_released.put(action.name, 0);
+                    GraphicsPanel.__actions_just_released.put(action.name, 0);
                 }
                 action.is_pressed = false;
                 action.was_just_pressed = false;
@@ -101,12 +99,11 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mouse_pressed = true;
         mouse_position_when_pressed.x = e.getX();
         mouse_position_when_pressed.y = e.getY();
 
         int mouse_code = e.getButton();
-        // System.out.println(mouse_code);
+        
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.mouse_codes.length; i++) {
                 if(action.mouse_codes[i] == mouse_code && !action.pressed_keys.contains(mouse_code) && 
@@ -119,7 +116,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
                 if(!action.was_just_pressed){
                     action.is_just_pressed = true;
                     action.was_just_pressed = true;
-                    GraphicPanel._actions_just_pressed.put(action.name, 0);
+                    GraphicsPanel.__actions_just_pressed.put(action.name, 0);
                 }
                 action.is_pressed = true;
                 action.is_released = false;
@@ -130,9 +127,11 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mouse_released = true;
+        mouse_position_when_released.x = e.getX();
+        mouse_position_when_released.y = e.getY();
 
         int mouse_code = e.getButton();
+
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.mouse_codes.length; i++) {
                 if(action.mouse_codes[i] == mouse_code && action.pressed_keys.contains(mouse_code) && 
@@ -145,7 +144,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
                 if(!action.was_just_released){
                     action.is_just_released = true;
                     action.was_just_released = true;
-                    GraphicPanel._actions_just_released.put(action.name, 0);
+                    GraphicsPanel.__actions_just_released.put(action.name, 0);
                 }
                 action.is_pressed = false;
                 action.was_just_pressed = false;
@@ -176,22 +175,6 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-    }
-
-    public static boolean is_mouse_pressed() {
-        return mouse_pressed;
-    }
-
-    public static boolean is_mouse_released() {
-        return mouse_released;
-    }
-
-    public static boolean is_mouse_just_pressed() {
-        return mouse_just_pressed;
-    }
-
-    public static boolean is_mouse_just_released() {
-        return mouse_just_released;
     }
 
     public static void create_new_action(String name, int[] keyboard_codes, int[] mouse_codes, int[] mouse_wheel_codes){
@@ -267,11 +250,11 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         return false;
     }
 
-    public static void _action_is_no_more_just_pressed(String name){
+    public static void __action_is_no_more_just_pressed(String name){
         input_actions.get(name).is_just_pressed = false;
     }
 
-    public static void _action_is_no_more_just_released(String name){
+    public static void __action_is_no_more_just_released(String name){
         input_actions.get(name).is_just_released = false;
     }
 

@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 public class Window extends JFrame {
 
-    GraphicPanel g_panel;
+    GraphicsPanel g_panel;
     Thread engine_thread;
 
     Input input = new Input();
@@ -16,7 +16,7 @@ public class Window extends JFrame {
         setSize(width, height);
         setLayout(null);
 
-        g_panel = new GraphicPanel(width, height);
+        g_panel = new GraphicsPanel(width, height);
         add(g_panel);
 
         addKeyListener(input);
