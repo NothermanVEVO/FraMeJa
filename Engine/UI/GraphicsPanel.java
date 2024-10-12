@@ -150,6 +150,10 @@ public class GraphicsPanel extends JPanel implements Runnable {
         graphics_item_list.add(g_item);
     }
 
+    public static void remove_graphic_item(GraphicsItem g_item){
+        graphics_item_list.remove(g_item);
+    }
+
     private void auto_load_graphics_items(){
         Reflections reflections = new Reflections("src");
         Set<Class<? extends GraphicsItemAuto>> subClasses = reflections.getSubTypesOf(GraphicsItemAuto.class);

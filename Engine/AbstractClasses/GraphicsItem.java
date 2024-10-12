@@ -12,4 +12,8 @@ public abstract class GraphicsItem {
 
     public abstract void update(double delta_time);
     public abstract void draw(Graphics2D g2);
+
+    public void free(){
+        GraphicsPanel.remove_graphic_item(this);
+    }
 }
