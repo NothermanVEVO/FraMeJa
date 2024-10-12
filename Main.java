@@ -1,37 +1,20 @@
-import java.util.Set;
-
-import org.reflections.Reflections;
-
-import Engine.GraphicsItem;
-import Engine.Input;
-import Engine.Window;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import Engine.GlobalVariables.Input;
+import Engine.UI.GraphicsPanel;
+import Engine.UI.Window;
 
 public class Main{
 
     public static void main(String[] args) {
 
-        read_graphics_items();
+        Input.create_new_action("Move Up", new int[]{KeyEvent.VK_W, KeyEvent.VK_UP}, new int[0], new int[]{Input.MOUSE_WHEEL_UP});
+        Input.create_new_action("Move Down", new int[]{KeyEvent.VK_S, KeyEvent.VK_DOWN}, new int[0], new int[]{Input.MOUSE_WHEEL_DOWN});
+        Input.create_new_action("Move Left", new int[]{KeyEvent.VK_A, KeyEvent.VK_LEFT}, new int[]{MouseEvent.BUTTON1}, new int[0]);
+        Input.create_new_action("Move Right", new int[]{KeyEvent.VK_D, KeyEvent.VK_RIGHT}, new int[]{MouseEvent.BUTTON3}, new int[0]);
+        
+        new Window("Framework do Paraguai", 800, 600).add(new GraphicsPanel(800, 600));
 
-        int[] keyboard_accept = {10, 32};
-        int[] mouse_accept = {1};
-
-        Input.create_new_action("Accept", keyboard_accept, mouse_accept, new int[0]);
-
-        new Window("Framework do Paraguai", 800, 600);
-
-    }
-
-    private static void read_graphics_items(){
-        Reflections reflections = new Reflections("src");
-        Set<Class<? extends GraphicsItem>> subClasses = reflections.getSubTypesOf(GraphicsItem.class);
-        for (Class<? extends GraphicsItem> subClass : subClasses) {
-            try {
-                subClass.getDeclaredConstructor().newInstance();
-                System.out.println("Instancia de: " + subClass.getSimpleName() + " criada.");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

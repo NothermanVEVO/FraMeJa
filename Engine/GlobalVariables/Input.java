@@ -1,4 +1,4 @@
-package Engine;
+package Engine.GlobalVariables;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -9,32 +9,42 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.event.MouseInputListener;
 
+import Engine.UI.GraphicsPanel;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import GlobalVariables.Vector2;
-
 public class Input implements KeyListener, MouseInputListener, MouseWheelListener{
 
-    public final static int KEYBOARD_INPUT = 1;
-    public final static int MOUSE_INPUT = 2;
+    public static final int MOUSE_WHEEL_UP = -20;
+    public static final int MOUSE_WHEEL_DOWN = -10;
 
     private static Vector2 mouse_position = new Vector2();
     private static Vector2 mouse_position_when_pressed = new Vector2();
     private static Vector2 mouse_position_when_released = new Vector2();
 
+    private static boolean any_key_pressed = false;
+    private static int any_key_count = 0;
+
+    private static boolean mouse_pressed = false;
+    private static int mouse_count = 0;
+
+    private static boolean anything_pressed = false;
+    private static int anything_count = 0;
+
     private static HashMap<String, Action> input_actions = new HashMap<String, Action>();
 
     private static boolean first_time_init = true;
 
-    Input(){
+    public Input(){
         if(first_time_init){
             first_time_init = false;
         } else{
             try {
-                throw new Exception("You can't create the Object Input");
+                throw new Exception("Object \"Input\" can't be created more than 1 time!");
             } catch (Exception e) {
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
     }
@@ -46,6 +56,12 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyPressed(KeyEvent e) {
         int key_code = e.getKeyCode();
+        
+        any_key_pressed = true;
+        any_key_count++;
+
+        anything_pressed = true;
+        anything_count++;
 
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.keyboard_codes.length; i++) {
@@ -71,6 +87,16 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyReleased(KeyEvent e) {
         int key_code = e.getKeyCode();
+        
+        any_key_count--;
+        if(any_key_count == 0){
+            any_key_pressed = false;
+        }
+
+        anything_count--;
+        if(anything_count == 0){
+            anything_pressed = false;
+        }
 
         for(Action action : input_actions.values()){
             for (int i = 0; i < action.keyboard_codes.length; i++) {
@@ -102,6 +128,12 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         mouse_position_when_pressed.x = e.getX();
         mouse_position_when_pressed.y = e.getY();
 
+        mouse_pressed = true;
+        mouse_count++;
+
+        anything_pressed = true;
+        anything_count++;
+
         int mouse_code = e.getButton();
         
         for(Action action : input_actions.values()){
@@ -129,6 +161,16 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     public void mouseReleased(MouseEvent e) {
         mouse_position_when_released.x = e.getX();
         mouse_position_when_released.y = e.getY();
+
+        mouse_count--;
+        if(mouse_count == 0){
+            mouse_pressed = false;
+        }
+
+        anything_count--;
+        if(anything_count == 0){
+            anything_pressed = false;
+        }
 
         int mouse_code = e.getButton();
 
@@ -175,9 +217,119 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
+        int wheel_code = e.getWheelRotation();
+        wheel_code = wheel_code == -1 ? MOUSE_WHEEL_UP : wheel_code == 1 ? MOUSE_WHEEL_DOWN : wheel_code;
+
+        any_key_pressed = true;
+        any_key_count++;
+
+        anything_pressed = true;
+        anything_count++;
+
+        for(Action action : input_actions.values()){
+            for (int i = 0; i < action.mouse_wheel_codes.length; i++) {
+                if(action.mouse_wheel_codes[i] == wheel_code && !action.pressed_keys.contains(wheel_code) && 
+                    action.released_keys.contains(wheel_code)){
+                        action.pressed_keys.add(wheel_code);
+                        action.released_keys.remove((Object) wheel_code);
+                }
+            }
+            if(action.pressed_keys.size() > 0 && action.released_keys.size() < action.number_of_keys){
+                if(!action.was_just_pressed){
+                    action.is_just_pressed = true;
+                    action.was_just_pressed = true;
+                    GraphicsPanel.__actions_just_pressed.put(action.name, 0);
+                }
+                if(wheel_code == MOUSE_WHEEL_UP){
+                    GraphicsPanel.__wheel_moved_up = 0;
+                } else if(wheel_code == MOUSE_WHEEL_DOWN){
+                    GraphicsPanel.__wheel_moved_down = 0;
+                }
+                action.is_pressed = true;
+                action.is_released = false;
+                action.was_just_released = false;
+            }
+        }
+    }
+
+    public static void __mouse_wheel_up_released(){
+
+        any_key_count--;
+        if(any_key_count == 0){
+            any_key_pressed = false;
+        }
+
+        anything_count--;
+        if(anything_count == 0){
+            anything_pressed = false;
+        }
+
+        for(Action action : input_actions.values()){
+            for (int i = 0; i < action.mouse_wheel_codes.length; i++) {
+                if(action.mouse_wheel_codes[i] == MOUSE_WHEEL_UP && action.pressed_keys.contains(MOUSE_WHEEL_UP) && 
+                    !action.released_keys.contains(MOUSE_WHEEL_UP)){
+                        action.pressed_keys.remove((Object) MOUSE_WHEEL_UP);
+                        action.released_keys.add(MOUSE_WHEEL_UP);
+                }
+            }
+            if(action.released_keys.size() > 0 && action.pressed_keys.size() == 0){
+                if(!action.was_just_released){
+                    action.is_just_released = true;
+                    action.was_just_released = true;
+                    GraphicsPanel.__actions_just_released.put(action.name, 0);
+                }
+                action.is_pressed = false;
+                action.was_just_pressed = false;
+                action.is_released = true;
+            }
+        }
+    }
+
+    public static void __mouse_wheel_down_released(){
+        any_key_count--;
+        if(any_key_count == 0){
+            any_key_pressed = false;
+        }
+
+        anything_count--;
+        if(anything_count == 0){
+            anything_pressed = false;
+        }
+
+        for(Action action : input_actions.values()){
+            for (int i = 0; i < action.mouse_wheel_codes.length; i++) {
+                if(action.mouse_wheel_codes[i] == MOUSE_WHEEL_DOWN && action.pressed_keys.contains(MOUSE_WHEEL_DOWN) && 
+                    !action.released_keys.contains(MOUSE_WHEEL_DOWN)){
+                        action.pressed_keys.remove((Object) MOUSE_WHEEL_DOWN);
+                        action.released_keys.add(MOUSE_WHEEL_DOWN);
+                }
+            }
+            if(action.released_keys.size() > 0 && action.pressed_keys.size() == 0){
+                if(!action.was_just_released){
+                    action.is_just_released = true;
+                    action.was_just_released = true;
+                    GraphicsPanel.__actions_just_released.put(action.name, 0);
+                }
+                action.is_pressed = false;
+                action.was_just_pressed = false;
+                action.is_released = true;
+            }
+        }
     }
 
     public static void create_new_action(String name, int[] keyboard_codes, int[] mouse_codes, int[] mouse_wheel_codes){
+        
+        for(String str : input_actions.keySet()){
+            if(name.equals(str)){
+                try {
+                    throw new Exception("Actions with name repeated! -> \"" + name + "\"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.exit(-1);
+                }
+            }
+        }
+
         String a_name;
         int[] a_keyboard_codes;
         int[] a_mouse_codes;
@@ -213,7 +365,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     private static boolean action_exist(String name){
         if(!input_actions.containsKey(name)){
             try {
-                throw new Exception("Action not found!");
+                throw new Exception("Action \"" + name + "\" not found!");
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -250,12 +402,39 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         return false;
     }
 
+    public static boolean is_any_key_pressed() {
+        return any_key_pressed;
+    }
+
+    public static boolean is_mouse_pressed() {
+        return mouse_pressed;
+    }
+
+    public static boolean is_mouse_released() {
+        return !mouse_pressed;
+    }
+
+    public static boolean is_anything_pressed() {
+        return anything_pressed;
+    }
+
     public static void __action_is_no_more_just_pressed(String name){
         input_actions.get(name).is_just_pressed = false;
     }
 
     public static void __action_is_no_more_just_released(String name){
         input_actions.get(name).is_just_released = false;
+    }
+
+    public static int get_axis(String negative_action, String positive_action){
+        int value = 0;
+        if(Input.is_action_pressed(negative_action)) value--;
+        if(Input.is_action_pressed(positive_action)) value++;
+        return value;
+    }
+
+    public static Vector2 get_vector(String negative_x, String positive_x, String negative_y, String positive_y){
+        return new Vector2(get_axis(negative_x, positive_x), get_axis(negative_y, positive_y));
     }
 
 }

@@ -1,4 +1,4 @@
-package GlobalVariables;
+package Engine.GlobalVariables;
 
 public class Vector2 {
 
