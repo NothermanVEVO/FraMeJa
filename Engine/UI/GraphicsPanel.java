@@ -39,7 +39,6 @@ public class GraphicsPanel extends JPanel implements Runnable {
 
     private static boolean first_time_init = true;
 
-    //TODO BUG: KEYBOARD NOT WORKING
     public GraphicsPanel(int width, int height){
         if(first_time_init){
             first_time_init = false;
