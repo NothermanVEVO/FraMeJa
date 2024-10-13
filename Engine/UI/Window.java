@@ -11,8 +11,6 @@ public class Window extends JFrame {
     public Window(String name, int width, int height){
         if(first_time_init){
             setTitle(name);
-            setFocusable(true);
-            setEnabled(true);
             setLayout(new BorderLayout());
 
             add(new GraphicsPanel(800, 600), BorderLayout.CENTER);
