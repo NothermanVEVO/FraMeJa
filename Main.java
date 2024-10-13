@@ -1,7 +1,6 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import Engine.GlobalVariables.Input;
-import Engine.UI.GraphicsPanel;
 import Engine.UI.Window;
 
 public class Main{
@@ -13,7 +12,7 @@ public class Main{
         Input.create_new_action("Move Left", new int[]{KeyEvent.VK_A, KeyEvent.VK_LEFT}, new int[]{MouseEvent.BUTTON1}, new int[0]);
         Input.create_new_action("Move Right", new int[]{KeyEvent.VK_D, KeyEvent.VK_RIGHT}, new int[]{MouseEvent.BUTTON3}, new int[0]);
         
-        new Window("Framework do Paraguai", 800, 600).add(new GraphicsPanel(800, 600));
+        new Window("Framework do Paraguai", 800, 600);
 
     }
 

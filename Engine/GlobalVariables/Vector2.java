@@ -42,52 +42,32 @@ public class Vector2 {
         return new Vector2(x / num, y / num);
     }
 
-    public boolean equal(Vector2 vct){
-        if(x == vct.x && y == vct.y){
-            return true;
-        } else{
-            return false;
-        }
+    public static Vector2 negative(Vector2 vct){
+        return vct.mult(-1);
     }
 
-    public boolean is_different(Vector2 vct){
-        if(x != vct.x || y != vct.y){
-            return true;
-        } else{
-            return false;
-        }
+    public boolean equal(Vector2 vct){
+        return x == vct.x && y == vct.y;
+    }
+
+    public boolean different(Vector2 vct){
+        return x != vct.x || y != vct.y;
     }
 
     public boolean greater(Vector2 vct){
-        if(magnitude_squared() > vct.magnitude_squared()){
-            return true;
-        } else{
-            return false;
-        }
+        return x > vct.x && y > vct.y;
     }
 
     public boolean greater_or_equal(Vector2 vct){
-        if(magnitude_squared() >= vct.magnitude_squared()){
-            return true;
-        } else{
-            return false;
-        }
+        return x >= vct.x && y >= vct.y;
     }
 
     public boolean less(Vector2 vct){
-        if(magnitude_squared() < vct.magnitude_squared()){
-            return true;
-        } else{
-            return false;
-        }
+        return x < vct.x && y < vct.y;
     }
 
     public boolean less_or_equal(Vector2 vct){
-        if(magnitude_squared() <= vct.magnitude_squared()){
-            return true;
-        } else{
-            return false;
-        }
+        return x <= vct.x && y <= vct.y;
     }
 
     public Vector2 abs(){

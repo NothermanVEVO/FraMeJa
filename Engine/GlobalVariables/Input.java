@@ -345,7 +345,8 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         } else{
             a_name = name;
         }
-        if(keyboard_codes.length == 0 && mouse_codes.length == 0 && mouse_wheel_codes.length == 0){
+        
+        if((keyboard_codes == null || keyboard_codes.length == 0) && (mouse_codes == null || mouse_codes.length == 0) && (mouse_wheel_codes == null || mouse_wheel_codes.length == 0)){
             try {
                 throw new Exception("Action should have at least ONE key code!");
             } catch (Exception e) {
@@ -418,6 +419,18 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         return anything_pressed;
     }
 
+    public static Vector2 get_mouse_position() {
+        return mouse_position;
+    }
+
+    public static Vector2 get_mouse_position_when_pressed() {
+        return mouse_position_when_pressed;
+    }
+
+    public static Vector2 get_mouse_position_when_released() {
+        return mouse_position_when_released;
+    }
+
     public static void __action_is_no_more_just_pressed(String name){
         input_actions.get(name).is_just_pressed = false;
     }
@@ -465,19 +478,19 @@ class Action{
 
     Action(String name, int[] keyboard_codes, int[] mouse_codes, int[] mouse_wheel_codes){
         this.name = name;
-        this.keyboard_codes = keyboard_codes;
-        this.mouse_codes = mouse_codes;
-        this.mouse_wheel_codes = mouse_wheel_codes;
-        for(int i : keyboard_codes){
+        this.keyboard_codes = keyboard_codes == null ? new int[0] : keyboard_codes;
+        this.mouse_codes = mouse_codes == null ? new int[0] : mouse_codes;
+        this.mouse_wheel_codes = mouse_wheel_codes == null ? new int[0] : mouse_wheel_codes;
+        for(int i : this.keyboard_codes){
             released_keys.add(i);
         }
-        for(int i : mouse_codes){
+        for(int i : this.mouse_codes){
             released_keys.add(i);
         }
-        for(int i : mouse_wheel_codes){
+        for(int i : this.mouse_wheel_codes){
             released_keys.add(i);
         }
-        number_of_keys = keyboard_codes.length + mouse_codes.length + mouse_wheel_codes.length;
+        number_of_keys = this.keyboard_codes.length + this.mouse_codes.length + this.mouse_wheel_codes.length;
     }
 
 }

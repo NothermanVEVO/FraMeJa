@@ -1,12 +1,10 @@
 package Engine.UI;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
 
-import Engine.GlobalVariables.Input;
-
 public class Window extends JFrame {
-
-    private static Input input;
 
     private static boolean first_time_init = true;
 
@@ -15,19 +13,15 @@ public class Window extends JFrame {
             setTitle(name);
             setFocusable(true);
             setEnabled(true);
-            setSize(width, height);
-            setLayout(null);
+            setLayout(new BorderLayout());
 
-            input = new Input();
-
-            addKeyListener(input);
-            addMouseListener(input);
-            addMouseMotionListener(input);
-            addMouseWheelListener(input);
+            add(new GraphicsPanel(800, 600), BorderLayout.CENTER);
+            pack();
             
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLocationRelativeTo(null);
             setVisible(true);
+            
             first_time_init = false;
         } else{
             try {

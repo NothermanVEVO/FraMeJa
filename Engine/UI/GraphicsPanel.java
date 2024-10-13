@@ -1,5 +1,6 @@
 package Engine.UI;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
@@ -23,6 +24,11 @@ public class GraphicsPanel extends JPanel implements Runnable {
 
     private static double delta_time;
 
+    private static int width;
+    private static int height;
+
+    private static Input input;
+
     private static ArrayList<GraphicsItem> graphics_item_list = new ArrayList<GraphicsItem>();
 
     public static HashMap<String, Integer> __actions_just_pressed = new HashMap<String, Integer>();
@@ -33,18 +39,31 @@ public class GraphicsPanel extends JPanel implements Runnable {
 
     private static boolean first_time_init = true;
 
+    //TODO BUG: KEYBOARD NOT WORKING
     public GraphicsPanel(int width, int height){
         if(first_time_init){
             first_time_init = false;
+
+            GraphicsPanel.width = width;
+            GraphicsPanel.height = height;
+
             // Auto instantiate all classes that inherits the class "GraphicsItemAuto"
             auto_load_graphics_items();
 
             // Adjust the JPanel
             setBounds(0, 0, width, height);
+            setPreferredSize(new Dimension(width, height));
             setFocusable(true);
             setDoubleBuffered(true);
             setEnabled(true);
             setLayout(null);
+
+            input = new Input();
+
+            addKeyListener(input);
+            addMouseListener(input);
+            addMouseMotionListener(input);
+            addMouseWheelListener(input);
 
             // Create and start the Thread
             engine_thread = new Thread(this);
@@ -144,6 +163,14 @@ public class GraphicsPanel extends JPanel implements Runnable {
     //? It change the var fps, but don't actually change the Thread fps
     public static void set_FPS(int FPS) {
         GraphicsPanel.FPS = FPS;
+    }
+
+    public static int get_width(){
+        return GraphicsPanel.width;
+    }
+
+    public static int get_height(){
+        return GraphicsPanel.height;
     }
 
     public static void __add_graphic_item(GraphicsItem g_item){
