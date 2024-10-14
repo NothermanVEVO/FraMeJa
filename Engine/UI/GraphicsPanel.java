@@ -46,10 +46,8 @@ public class GraphicsPanel extends JPanel implements Runnable {
             GraphicsPanel.width = width;
             GraphicsPanel.height = height;
 
-            // Auto instantiate all classes that inherits the class "GraphicsItemAuto"
-            auto_load_graphics_items();
-
             // Adjust the JPanel
+            setOpaque(false);
             setBounds(0, 0, width, height);
             setPreferredSize(new Dimension(width, height));
             setFocusable(true);
@@ -83,6 +81,9 @@ public class GraphicsPanel extends JPanel implements Runnable {
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
+
+        // Auto instantiate all classes that inherits the class "GraphicsItemAuto"
+        auto_load_graphics_items();
 
         while(true){
             currentTime = System.nanoTime();
