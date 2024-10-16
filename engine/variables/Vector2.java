@@ -1,85 +1,169 @@
-package Engine.GlobalVariables;
+package engine.variables;
 
+/**
+ * Represent a 2D coordinates.
+ */
 public class Vector2 {
 
+    /*
+     * Flags for basic vectors2.
+     */
     public static final Vector2 ZERO = new Vector2(0, 0);
     public static final Vector2 RIGHT = new Vector2(1, 0);
     public static final Vector2 LEFT = new Vector2(-1, 0);
     public static final Vector2 UP = new Vector2(0, -1);
     public static final Vector2 DOWN = new Vector2(0, 1);
 
+    // Coordinate x.
     public double x = 0;
+    
+    // Coordinate y.
     public double y = 0;
 
+    /**
+     * Create a {@code Vector2} of position (0, 0).
+     */
     public Vector2(){}
 
+    /**
+     * Create a {@code Vector2} of the given position.
+     * @param x Coordinate x.
+     * @param y Coordinate y.
+     */
     public Vector2(double x, double y){
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Sum a {@code Vector2} with another {@code Vector2}
+     * @param vct The {@code Vector2} to be sum.
+     * @return The sum of {@code this} and {@code vct}.
+     */
     public Vector2 sum(Vector2 vct){
         return new Vector2(x + vct.x, y + vct.y);
     }
 
+    /**
+     * Subtract a {@code Vector2} with another {@code Vector2}
+     * @param vct The {@code Vector2} to subtract {@code this}.
+     * @return The subtraction of {@code this} and {@code vct}.
+     */
     public Vector2 sub(Vector2 vct){
         return new Vector2(x - vct.x, y - vct.y);
     }
 
+    /**
+     * Multiply a {@code Vector2} with another {@code Vector2}
+     * @param vct The {@code Vector2} to multiply.
+     * @return The multiplication of {@code this} and {@code vct}.
+     */
     public Vector2 mult(Vector2 vct){
         return new Vector2(x * vct.x, y * vct.y);
     }
 
+    /**
+     * Multiply a {@code Vector2} with a value {@code double}
+     * @param num A {@code double} to multiply {@code this}.
+     * @return The multiplication of {@code this} and {@code num}.
+     */
     public Vector2 mult(double num){
         return new Vector2(x * num, y * num);
     }
 
+    /**
+     * Divide a {@code Vector2} with another {@code Vector2}
+     * @param vct The {@code Vector2} to divide.
+     * @return The division of {@code this} and {@code vct}.
+     */
     public Vector2 div(Vector2 vct){
         return new Vector2(x / vct.x, y / vct.y);
     }
 
+    /**
+     * Divide a {@code Vector2} with a value {@code double}
+     * @param num A {@code double} to divide {@code this}.
+     * @return The division of {@code this} and {@code num}.
+     */
     public Vector2 div(double num){
         return new Vector2(x / num, y / num);
     }
 
+    /**
+     * Negative the given {@code Vector2}.
+     * @param vct The {@code Vector2} to be negative.
+     * @return The negative of {@code vct}.
+     */
     public static Vector2 negative(Vector2 vct){
         return vct.mult(-1);
     }
 
+    /**
+     * Check if {@code this} is equal to {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code x} and {@code y} are equal, else {@code false}.
+     */
     public boolean equal(Vector2 vct){
         return x == vct.x && y == vct.y;
     }
 
+    /**
+     * Check if {@code this} is different from {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code x} or {@code y} are different, else {@code false}.
+     */
     public boolean different(Vector2 vct){
         return x != vct.x || y != vct.y;
     }
 
+    /**
+     * Check if {@code this} is greater than {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code this.x} and {@code this.y} are greater, else {@code false}.
+     */
     public boolean greater(Vector2 vct){
         return x > vct.x && y > vct.y;
     }
 
-    public boolean greater_or_equal(Vector2 vct){
+    /**
+     * Check if {@code this} is greater or equal than {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code this.x} and {@code this.y} are greater or equal, 
+     * else {@code false}.
+     */
+    public boolean greaterOrEqual(Vector2 vct){
         return x >= vct.x && y >= vct.y;
     }
 
+    /**
+     * Check if {@code this} is less than {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code this.x} and {@code this.y} are less, else {@code false}.
+     */
     public boolean less(Vector2 vct){
         return x < vct.x && y < vct.y;
     }
 
-    public boolean less_or_equal(Vector2 vct){
+    /**
+     * Check if {@code this} is less or equal than {@code vct}.
+     * @param vct Another {@code Vector2}.
+     * @return {@code true} if coordinates {@code this.x} and {@code this.y} are less or equal, else {@code false}.
+     */
+    public boolean lessOrEqual(Vector2 vct){
         return x <= vct.x && y <= vct.y;
     }
 
+    
     public Vector2 abs(){
         return new Vector2(Math.abs(x), Math.abs(y));
     }
 
-    public double magnitude_squared() {
+    public double magnitudeSquared() {
         return x * x + y * y;
     }
 
     public double magnitude() {
-        return Math.sqrt(magnitude_squared());
+        return Math.sqrt(magnitudeSquared());
     }
 
     public Vector2 normalized(){
@@ -99,18 +183,18 @@ public class Vector2 {
         return Math.atan2(y, x);
     }
 
-    public double angle_to(Vector2 vct) {
-        double dot_product = dot(vct);
+    public double angleTo(Vector2 vct) {
+        double dotProduct = dot(vct);
         double magnitudes = magnitude() * vct.magnitude();
         if (magnitudes > 0) {
-            double cos_theta = Math.max(-1, Math.min(1, dot_product / magnitudes));
-            return Math.acos(cos_theta);
+            double cosTheta = Math.max(-1, Math.min(1, dotProduct / magnitudes));
+            return Math.acos(cosTheta);
         } else{
             return 0;
         }
     }
 
-    public double angle_to_point(Vector2 vct) {
+    public double angleToPoint(Vector2 vct) {
         return Math.atan2(vct.y - y, vct.x - x);
     }
 
@@ -132,17 +216,17 @@ public class Vector2 {
         );
     }
 
-    public Vector2 direction_to(Vector2 vct) {
+    public Vector2 directionTo(Vector2 vct) {
         Vector2 direction = vct.sub(this);
         return direction.normalized();
     }
 
-    public double distance_squared_to(Vector2 vct) {
+    public double distanceSquaredTo(Vector2 vct) {
         return Math.pow(vct.x - x, 2) + Math.pow(vct.y - y, 2);
     }
 
-    public double distance_to(Vector2 vct) {
-        return Math.sqrt(distance_squared_to(vct));
+    public double distanceTo(Vector2 vct) {
+        return Math.sqrt(distanceSquaredTo(vct));
     }
 
     public Vector2 lerp(Vector2 vct, double weight) {
@@ -152,8 +236,8 @@ public class Vector2 {
         );
     }
 
-    public Vector2 move_toward(Vector2 vct, double delta) {
-        Vector2 direction = direction_to(vct);
+    public Vector2 moveToward(Vector2 vct, double delta) {
+        Vector2 direction = directionTo(vct);
         return sum(direction.mult(delta));
     }
 
@@ -202,7 +286,7 @@ public class Vector2 {
         );
     }
 
-    public static Vector2 from_angle(double angle) {
+    public static Vector2 fromAngle(double angle) {
         return new Vector2(Math.cos(angle), Math.sin(angle));
     }
 
