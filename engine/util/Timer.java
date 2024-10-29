@@ -73,12 +73,11 @@ public class Timer {
         timeLeft -= deltaTime;
         if(timeLeft <= 0){
             emitEvent();
-            timeLeft = 0;
             if(oneTime){
                 stop = true;
                 return;
             }
-            timeLeft = waitTime;
+            timeLeft += waitTime;
         }
     }
 
