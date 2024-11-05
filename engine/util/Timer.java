@@ -120,7 +120,7 @@ public class Timer {
      * {@link GraphicsPanel} but not freed in the memory.
      */
     public void free(){
-        GraphicsPanel.removerTimer(this);
+        GraphicsPanel.removeTimer(this);
     }
 
 }

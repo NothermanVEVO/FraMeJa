@@ -1,13 +1,18 @@
 package engine.abstractclasses;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import engine.util.GraphicsPanel;
+import engine.util.Log;
+import engine.variables.Vector2;
 
 /**
  * Class to process and draw (based in the {@code z}) in the {@link GraphicsPanel}.
  */
 public abstract class GraphicsItem {
+
+    public Vector2 position = new Vector2();
 
     /*
      * The position of the draw.
@@ -21,6 +26,10 @@ public abstract class GraphicsItem {
     // Flag for the GraphicsPanel to know if the draw() should be called.
     private boolean drawEnabled = true;
 
+    private ArrayList<GraphicsItem> children = new ArrayList<>();
+
+    protected GraphicsItem parent;
+
     /**
      * It's called every frame, if the update is enabled, and process all the code inside.
      * @param deltaTime The variance between the current frame and the last frame.
@@ -33,13 +42,63 @@ public abstract class GraphicsItem {
      */
     public abstract void draw(Graphics2D g2);
 
+    public ArrayList<GraphicsItem> getChildren(){
+        return children;
+    }
+
+    public void addChild(GraphicsItem child){
+        if(child.parent != null){
+            try {
+                throw new Exception("The child already has a parent!");
+            } catch (Exception e) {
+                Log.printExceptionWarning(e);
+                return;
+            }
+        }
+        children.add(child);
+        child.parent = this;
+        if(GraphicsPanel.containsGraphicItem(this) && !GraphicsPanel.containsGraphicItem(child)){
+            GraphicsPanel.addGraphicItem(child);
+        }
+    }
+
+    public void removeChild(GraphicsItem child){
+        if(!children.contains(child)){
+            try {
+                throw new Exception("This GraphicsItem doesn't contain that child!");
+            } catch (Exception e) {
+                Log.printExceptionWarning(e);
+                return;
+            }
+        }
+        children.remove(child);
+        child.parent = null;
+        child.free();
+    }
+
+    public void removeChild(int index){
+        children.remove(index);
+    }
+
+    public GraphicsItem getParent(){
+        return parent;
+    }
+
+    //TODO RECOMMENT
     /**
      * Remove {@code this} from the {@link GraphicsPanel}.
      * If there's another variable referencing {@code this}, it'll only be removed from {@link GraphicsPanel} but not freed
      * in the memory.
      */
     public void free(){
-        GraphicsPanel.removeGraphicItem(this);
+        if(parent != null){
+            parent.removeChild(this);
+        } else{
+            for (int i = 0; i < children.size();) {
+                removeChild(children.get(i));
+            }
+            GraphicsPanel.removeGraphicItem(this);
+        }
     }
 
     /**

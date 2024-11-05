@@ -107,7 +107,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
         setLayout(null);
 
         input = Input.getInstance();
-        addKeyListener(input);
+        // addKeyListener(input);
         addMouseListener(input);
         addMouseMotionListener(input);
         addMouseWheelListener(input);
@@ -219,9 +219,10 @@ public class GraphicsPanel extends JPanel implements Runnable {
         }
 
         // Update every class that inherits GraphicsItem
-        for (GraphicsItem graphics : graphicsItemList) {
-            if(graphics.isUpdateEnabled()){
-                graphics.update(deltaTime);
+        int n = graphicsItemList.size(); // If I don't do this, the code might get stuck in a loop
+        for (int i = 0; i < n; i++) { // Using this instead of each-loop to prevent ConcurrentModificationException
+            if(graphicsItemList.get(i).isUpdateEnabled()){
+                graphicsItemList.get(i).update(deltaTime);
             }
         }
     }
@@ -240,9 +241,10 @@ public class GraphicsPanel extends JPanel implements Runnable {
         }
 
         //// Draw every class that inherits GraphicsItem
-        for (GraphicsItem graphics : graphicsItemList) {
-            if (graphics.isDrawEnabled()) {
-                graphics.draw(g2);
+        int n = graphicsItemList.size(); // If I don't do this, the code might get stuck in a loop
+        for (int i = 0; i < n; i++) { // Using this instead of each-loop to prevent ConcurrentModificationException
+            if (graphicsItemList.get(i).isDrawEnabled()) {
+                graphicsItemList.get(i).draw(g2);
             }
         }
 
@@ -299,6 +301,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
         return GraphicsPanel.height;
     }
 
+    //TODO RECOMMENT
     /**
      * Add a {@link GraphicsItem} at the correct position in the {@link GraphicsPanel}.
      * <p>The correct position is based in the {@code z} of the {@code gItem}.<p>
@@ -308,6 +311,9 @@ public class GraphicsPanel extends JPanel implements Runnable {
     public static void addGraphicItem(GraphicsItem gItem){
         if(!graphicsItemList.contains(gItem)){
             addAtCorrectPosition(gItem);
+            for (GraphicsItem child : gItem.getChildren()) {
+                addGraphicItem(child);
+            }
         } else{
             try {
                 throw new Exception("The GraphicsItem: \"" + gItem + "\" is already " + 
@@ -318,6 +324,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
         }
     }
 
+    //TODO RECOMMENT
     /**
      * Remove the {@link GraphicsItem} from the {@link GraphicsPanel}.
      * @param gItem An object that inherits {@link GraphicsItem}.
@@ -325,7 +332,11 @@ public class GraphicsPanel extends JPanel implements Runnable {
      */
     public static void removeGraphicItem(GraphicsItem gItem){
         if(graphicsItemList.contains(gItem)){
-            graphicsItemList.remove(gItem);
+            if (gItem.getParent() != null) {
+                gItem.getParent().removeChild(gItem);
+            } else{
+                graphicsItemList.remove(gItem);
+            }
         } else{
             try {
                 throw new Exception("The GraphicsItem: \"" + gItem + "\" isn't inside the GraphicsPanel.");
@@ -357,7 +368,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
      * @param timer An object that inherits {@link Timer}
      * @throws Exception the {@code timer} doens't exists inside the {@link GraphicsPanel}.
      */
-    protected static void removerTimer(Timer timer){
+    protected static void removeTimer(Timer timer){
         if(timers.contains(timer)){
             timers.remove(timer);
         } else{

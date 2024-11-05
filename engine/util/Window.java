@@ -12,6 +12,8 @@ public class Window extends JFrame {
 
     private static Window instance;
 
+    private static Input input;
+
     /**
      * Create an {@code instance} of Window.
      */
@@ -19,6 +21,12 @@ public class Window extends JFrame {
         setTitle(name);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+
+        input = Input.getInstance();
+        addKeyListener(input);
     }
 
     /**

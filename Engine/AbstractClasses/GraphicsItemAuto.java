@@ -14,7 +14,7 @@ public abstract class GraphicsItemAuto extends GraphicsItem{
      * Create a instance of {@code GraphicsItemAuto}.
      * <h3> Note: </h3>
      * In this class you shouldn't manually instantiate, it's automatically instantiated when 
-     * the {@code Thread} of {@link GraphicsItem} starts.
+     * the {@code Thread} of {@link GraphicsPanel} starts.
      * @see org.reflections.Reflections
      */
     protected GraphicsItemAuto(){

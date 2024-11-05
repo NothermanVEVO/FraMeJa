@@ -1,6 +1,8 @@
 package src;
 
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Random;
 import java.awt.Color;
 
 import engine.abstractclasses.GraphicsItem;
@@ -17,18 +19,21 @@ import engine.variables.Vector2;
 
 public class Player extends GraphicsItemAuto {
 
-    Vector2 position = Vector2.ZERO;
     Vector2 size = new Vector2(100, 100);
     double speed = 300;
 
     double lowest_fps = Double.MAX_VALUE;
     double highest_fps = Double.MIN_VALUE;
 
+    int segundos = 0;
+
+    // Ball ball = new Ball();
+
     @Override
     public void create() {
-        Ball ball = new Ball();
-        ball.setZ(4);
-        GraphicsPanel.addGraphicItem(ball);
+        // ball.setZ(4);
+        // addChild(ball);
+        // GraphicsPanel.addGraphicItem(ball);
         setZ(3);
         Timer timer = new Timer();
         timer.addListeners(() -> timeout());
@@ -56,6 +61,22 @@ public class Player extends GraphicsItemAuto {
             highest_fps = Double.MIN_VALUE;
         }
 
+        if(Input.isActionJustPressed("Create")){
+            addChild(new Ball());
+        }
+
+        if(Input.isActionJustPressed("Destroy")){
+            ArrayList<GraphicsItem> children = getChildren();
+            if(!children.isEmpty()){
+                // removeChild(children.get(children.size() - 1));
+                children.get(children.size() - 1).free();
+            }
+        }
+
+        if(Input.isActionJustPressed("Destroy All")){
+            free();
+        }
+
         double fps = GraphicsPanel.getCurrentFps();
         if(fps > highest_fps){
             highest_fps = fps;
@@ -69,13 +90,14 @@ public class Player extends GraphicsItemAuto {
     public void draw(Graphics2D g2) {
         g2.setColor(Color.BLACK);
         g2.fillRect((int) position.x, (int) position.y, (int) size.x, (int) size.y);
-        g2.drawString("FPS: " + Integer.toString(Math.round((float) GraphicsPanel.getCurrentFps())), 20, 20);
-        g2.drawString("Highest FPS: " + Integer.toString(Math.round((float) highest_fps)), 20, 40);
-        g2.drawString("Lowest FPS: " + Integer.toString(Math.round((float) lowest_fps)), 20, 60);
+        g2.drawString("FPS: " + Integer.toString(Math.round((float) GraphicsPanel.getCurrentFps())), 0, 20);
+        g2.drawString("Highest FPS: " + Integer.toString(Math.round((float) highest_fps)), 0, 40);
+        g2.drawString("Lowest FPS: " + Integer.toString(Math.round((float) lowest_fps)), 0, 60);
     }
 
     public void timeout(){
-        System.out.println("Passou 1 segundo.");
+        segundos++;
+        System.out.println("Passou " + segundos + " segundos.");
     }
 
 }
@@ -83,6 +105,9 @@ public class Player extends GraphicsItemAuto {
 class Ball extends GraphicsItem{
 
     Ball(){
+        Random rng = new Random();
+        position.x = rng.nextInt(GraphicsPanel.getPanelWidth());
+        position.y = rng.nextInt(GraphicsPanel.getPanelHeight());
     }
 
     @Override
@@ -92,7 +117,8 @@ class Ball extends GraphicsItem{
     @Override
     public void draw(Graphics2D g2) {
         g2.setColor(Color.BLUE);
-        g2.fillOval(200, 200, 100, 100);
+        // g2.fillOval(200, 200, 100, 100);
+        g2.fillOval((int) position.x, (int) position.y, 100, 100);
     }
 
 }

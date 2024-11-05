@@ -18,7 +18,12 @@ public class Main{
         Input.createNewAction("Move Down", new int[]{KeyEvent.VK_S, KeyEvent.VK_DOWN}, new int[0], new int[]{Input.MOUSE_WHEEL_DOWN});
         Input.createNewAction("Move Left", new int[]{KeyEvent.VK_A, KeyEvent.VK_LEFT}, new int[]{MouseEvent.BUTTON1}, new int[0]);
         Input.createNewAction("Move Right", new int[]{KeyEvent.VK_D, KeyEvent.VK_RIGHT}, new int[]{MouseEvent.BUTTON3}, new int[0]);
+
         Input.createNewAction("Mouse 1", null, new int[]{MouseEvent.BUTTON1}, null);
+
+        Input.createNewAction("Create", new int[]{KeyEvent.VK_ENTER}, null, null);
+        Input.createNewAction("Destroy", new int[]{KeyEvent.VK_BACK_SPACE}, null, null);
+        Input.createNewAction("Destroy All", new int[]{KeyEvent.VK_DELETE}, null, null);
 
         window = Window.getInstance("Framework do Paraguai");
 
