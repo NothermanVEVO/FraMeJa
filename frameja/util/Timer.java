@@ -1,8 +1,8 @@
-package engine.util;
+package frameja.util;
 
 import java.util.ArrayList;
 
-import engine.listener.timer.TimerListener;
+import frameja.listener.timer.TimerListener;
 
 /**
  * Class that will count {@code x} seconds, after that time, an {@code Event} (timeout) will occur.

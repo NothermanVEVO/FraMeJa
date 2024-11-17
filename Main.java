@@ -3,9 +3,9 @@ import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import engine.util.GraphicsPanel;
-import engine.util.Input;
-import engine.util.Window;
+import frameja.util.GraphicsPanel;
+import frameja.util.Input;
+import frameja.util.Window;
 
 public class Main{
 

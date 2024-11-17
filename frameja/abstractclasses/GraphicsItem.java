@@ -1,11 +1,11 @@
-package engine.abstractclasses;
+package frameja.abstractclasses;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import engine.util.GraphicsPanel;
-import engine.util.Log;
-import engine.variables.Vector2;
+import frameja.util.GraphicsPanel;
+import frameja.util.Log;
+import frameja.variables.Vector2;
 
 /**
  * Class to process and draw (based in the {@code z}) in the {@link GraphicsPanel}.

@@ -3,14 +3,15 @@ package src;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Random;
-import java.awt.Color;
 
-import engine.abstractclasses.GraphicsItem;
-import engine.abstractclasses.GraphicsItemAuto;
-import engine.util.GraphicsPanel;
-import engine.util.Input;
-import engine.util.Timer;
-import engine.variables.Vector2;
+import frameja.abstractclasses.GraphicsItem;
+import frameja.abstractclasses.GraphicsItemAuto;
+import frameja.util.GraphicsPanel;
+import frameja.util.Input;
+import frameja.util.Timer;
+import frameja.variables.Vector2;
+
+import java.awt.Color;
 
 /**
  * CLASS CREATED FOR A TEST DEMONSTRATION

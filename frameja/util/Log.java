@@ -1,4 +1,4 @@
-package engine.util;
+package frameja.util;
 
 public abstract class Log {
 

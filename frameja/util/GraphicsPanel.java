@@ -1,4 +1,4 @@
-package engine.util;
+package frameja.util;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 import org.reflections.Reflections;
 
-import engine.abstractclasses.GraphicsItem;
-import engine.abstractclasses.GraphicsItemAuto;
+import frameja.abstractclasses.GraphicsItem;
+import frameja.abstractclasses.GraphicsItemAuto;
 
 /**
  * Class that updates and redraw every frame per second.

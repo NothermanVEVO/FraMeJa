@@ -1,4 +1,4 @@
-package engine.util;
+package frameja.util;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -9,7 +9,7 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.event.MouseInputListener;
 
-import engine.variables.Vector2;
+import frameja.variables.Vector2;
 
 import java.util.ArrayList;
 import java.util.HashMap;

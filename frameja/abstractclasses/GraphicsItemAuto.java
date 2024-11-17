@@ -1,8 +1,8 @@
-package engine.abstractclasses;
+package frameja.abstractclasses;
 
 import java.awt.Graphics2D;
 
-import engine.util.GraphicsPanel;
+import frameja.util.GraphicsPanel;
 
 /**
  * Inherits {@link GraphicsItem}, it's automatically instantiated and has a create method to 

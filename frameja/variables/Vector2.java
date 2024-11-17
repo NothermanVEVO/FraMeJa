@@ -1,18 +1,9 @@
-package engine.variables;
+package frameja.variables;
 
 /**
  * Represent a 2D coordinates.
  */
 public class Vector2 {
-
-    /*
-     * Flags for basic vectors2.
-     */
-    public static final Vector2 ZERO = new Vector2(0, 0);
-    public static final Vector2 RIGHT = new Vector2(1, 0);
-    public static final Vector2 LEFT = new Vector2(-1, 0);
-    public static final Vector2 UP = new Vector2(0, -1);
-    public static final Vector2 DOWN = new Vector2(0, 1);
 
     // Coordinate x.
     public double x = 0;
@@ -171,7 +162,7 @@ public class Vector2 {
         if(lenght > 0){
             return new Vector2(x / lenght, y / lenght);   
         } else{
-            return Vector2.ZERO;
+            return new Vector2();
         }
     }
 
@@ -288,6 +279,26 @@ public class Vector2 {
 
     public static Vector2 fromAngle(double angle) {
         return new Vector2(Math.cos(angle), Math.sin(angle));
+    }
+
+    public static Vector2 ZERO(){
+        return new Vector2(0, 0);
+    }
+
+    public static Vector2 RIGHT(){
+        return new Vector2(1, 0);
+    }
+
+    public static Vector2 LEFT(){
+        return new Vector2(-1, 0);
+    }
+
+    public static Vector2 UP(){
+        return new Vector2(0, -1);
+    }
+
+    public static Vector2 DOWN(){
+        return new Vector2(0, 1);
     }
 
     @Override

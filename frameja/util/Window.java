@@ -1,4 +1,4 @@
-package engine.util;
+package frameja.util;
 
 import java.awt.BorderLayout;
 
