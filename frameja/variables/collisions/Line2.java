@@ -17,6 +17,12 @@ public class Line2 extends Geom2 {
         
     }
 
+    @Override
+    public boolean collideWith(Vector2 vct) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'collideWith'");
+    }
+
     // NOT TESTED
     @Override
     public boolean collideWith(Line2 line) {

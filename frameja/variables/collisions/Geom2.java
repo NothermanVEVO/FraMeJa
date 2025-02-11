@@ -1,6 +1,10 @@
 package frameja.variables.collisions;
 
+import frameja.variables.Vector2;
+
 public abstract class Geom2 {
+
+    public abstract boolean collideWith(Vector2 vct);
 
     public abstract boolean collideWith(Line2 line);
 

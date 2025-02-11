@@ -9,6 +9,12 @@ public class Circle2 extends Geom2 {
     }
 
     @Override
+    public boolean collideWith(Vector2 vct) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'collideWith'");
+    }
+
+    @Override
     public boolean collideWith(Line2 line) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'collideWith'");
