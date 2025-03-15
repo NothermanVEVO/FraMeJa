@@ -10,6 +10,9 @@ import frameja.util.GraphicsPanel;
 import frameja.util.Input;
 import frameja.util.Timer;
 import frameja.variables.Vector2;
+import frameja.variables.collisions.Circle2;
+import frameja.variables.collisions.Line2;
+import frameja.variables.collisions.Rect2;
 
 import java.awt.Color;
 
@@ -27,6 +30,14 @@ public class Player extends GraphicsItemAuto {
     double highest_fps = Double.MIN_VALUE;
 
     int segundos = 0;
+
+    Line2 playerLine = new Line2();
+    Rect2 playerRect = new Rect2(0, 0, 100, 100);
+    Circle2 playerCircle = new Circle2(0, 0, 50);
+
+    Line2 enemyLine = new Line2(300, 100, 400, 200);
+    Rect2 enemyRect = new Rect2(300, 300, 50, 50);
+    Circle2 enemyCircle = new Circle2(300, 300, 100);
 
     // Ball ball = new Ball();
 
@@ -94,11 +105,33 @@ public class Player extends GraphicsItemAuto {
         g2.drawString("FPS: " + Integer.toString(Math.round((float) GraphicsPanel.getCurrentFps())), 0, 20);
         g2.drawString("Highest FPS: " + Integer.toString(Math.round((float) highest_fps)), 0, 40);
         g2.drawString("Lowest FPS: " + Integer.toString(Math.round((float) lowest_fps)), 0, 60);
+
+        playerLine.start = position;
+        playerRect.position = position;
+        playerCircle.position = position.sum(new Vector2(playerCircle.radius, playerCircle.radius));
+
+        playerLine.end = Input.getMousePosition();
+
+        g2.setColor(Color.RED);
+        drawLine(playerLine, g2);
+        // drawLine(enemyLine, g2);
+        // drawRect(playerRect, g2);
+        // drawRect(enemyRect, g2);
+        // drawCircle(playerCircle, g2);
+        drawCircle(enemyCircle, g2);
+        g2.setColor(Color.BLACK);
+        
+        g2.setColor(Color.BLUE);
+        System.out.println(playerLine.collideWith(enemyCircle));
+        // Vector2 collisionPoint = playerLine.collisionPoint(enemyCircle);
+        // if (collisionPoint != null) {
+        //     fillCircle(new Circle2(collisionPoint, 3), g2);
+        // }
     }
 
     public void timeout(){
         segundos++;
-        System.out.println("Passou " + segundos + " segundos.");
+        // System.out.println("Passou " + segundos + " segundos.");
     }
 
 }

@@ -137,10 +137,10 @@ public class GraphicsPanel extends JPanel implements Runnable {
         long lastTime = System.nanoTime();
         long currentTime;
 
-        Log.println(Log.SUCCESS, "FraMeJa initialized without errors!");
-
         // Auto instantiate all classes that inherits the class "GraphicsItemAuto".
         autoLoadGraphicsItems(packageOfAutoInstantiatedGraphics);
+
+        Log.println(Log.SUCCESS, "FraMeJa initialized without errors!");
 
         while(!stop){
             if(paused){
@@ -218,7 +218,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
             wheelMovedDown = -1;
         }
 
-        // Update every class that inherits GraphicsItem
+        // Update every class that inherits GraphicsItem and has update enabled
         int n = graphicsItemList.size(); // If I don't do this, the code might get stuck in a loop
         for (int i = 0; i < n; i++) { // Using this instead of each-loop to prevent ConcurrentModificationException
             if(graphicsItemList.get(i).isUpdateEnabled()){
@@ -240,7 +240,7 @@ public class GraphicsPanel extends JPanel implements Runnable {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
-        //// Draw every class that inherits GraphicsItem
+        // Draw every class that inherits GraphicsItem and has draw enabled
         int n = graphicsItemList.size(); // If I don't do this, the code might get stuck in a loop
         for (int i = 0; i < n; i++) { // Using this instead of each-loop to prevent ConcurrentModificationException
             if (graphicsItemList.get(i).isDrawEnabled()) {
@@ -301,10 +301,10 @@ public class GraphicsPanel extends JPanel implements Runnable {
         return GraphicsPanel.height;
     }
 
-    //TODO RECOMMENT
     /**
      * Add a {@link GraphicsItem} at the correct position in the {@link GraphicsPanel}.
      * <p>The correct position is based in the {@code z} of the {@code gItem}.<p>
+     * <p>If the {@code gItem} has children, they will be added alongside.<p>
      * @param gItem An object that inherits {@link GraphicsItem}.
      * @throws Exception the {@code gItem} already exists inside the {@link GraphicsPanel}.
      */
@@ -324,9 +324,9 @@ public class GraphicsPanel extends JPanel implements Runnable {
         }
     }
 
-    //TODO RECOMMENT
     /**
      * Remove the {@link GraphicsItem} from the {@link GraphicsPanel}.
+     * <p>If the {@code gItem} has children, they will be removed alongside.<p>
      * @param gItem An object that inherits {@link GraphicsItem}.
      * @throws Exception the {@code gItem} doesn't exists inside the {@link GraphicsPanel}.
      */

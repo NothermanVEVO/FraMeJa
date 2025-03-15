@@ -35,6 +35,10 @@ public class Main{
 
         gPanel.start();
 
+        //TODO BUGS IN LINE COLLISION WITH CIRCLE
+        //TODO COMMENT LINE CLASS, AND ABOUT ALL THE GEOM CLASSES
+        //TODO FINISH COMMENTING VECTOR2
+
     }
 
 }
