@@ -3,7 +3,7 @@ package frameja.variables;
 /**
  * Represent a 2D coordinates.
  */
-public class Vector2 {
+public class Vector2 implements Cloneable {
 
     // Coordinate x.
     public double x = 0;
@@ -304,6 +304,44 @@ public class Vector2 {
     @Override
     public String toString(){
         return "(" + x + ", " + y + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+        if (obj == null){
+            return false;
+        }
+        if (getClass() != obj.getClass()){
+            return false;
+        }
+        Vector2 other = (Vector2) obj;
+        if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x)){
+            return false;
+        }
+        return Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Vector2 clone = (Vector2) super.clone();
+        clone.x = x;
+        clone.y = y;
+        return clone;
     }
 
 }

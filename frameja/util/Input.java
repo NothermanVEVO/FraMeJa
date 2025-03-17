@@ -59,6 +59,14 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     // HashMap that keep all the created actions and use them to check if the action is occurring.
     private static HashMap<String, Action> inputActions = new HashMap<String, Action>();
 
+    private static int lastKeyPressed = -1;
+    private static int lastMouseButtonPressed = -1;
+    private static int lastMouseWheelButtonPressed = -1;
+
+    private static int lastKeyReleased = -1;
+    private static int lastMouseButtonReleased = -1;
+    private static int lastMouseWheelButtonReleased = -1;
+
     // Instance of Input.
     private static Input instance = new Input();
 
@@ -83,6 +91,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        lastKeyPressed = keyCode;
         
         anyKeyPressed = true;
         anyKeyCount++;
@@ -114,6 +123,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
     @Override
     public void keyReleased(KeyEvent e) {
         int keyCode = e.getKeyCode();
+        lastKeyPressed = keyCode;
         
         anyKeyCount--;
         if(anyKeyCount == 0){
@@ -162,6 +172,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         anyThingCount++;
 
         int mouseCode = e.getButton();
+        lastMouseButtonPressed = mouseCode;
         
         for(Action action : inputActions.values()){
             for (int i = 0; i < action.mouseCodes.length; i++) {
@@ -200,6 +211,7 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         }
 
         int mouseCode = e.getButton();
+        lastMouseButtonReleased = mouseCode;
 
         for(Action action : inputActions.values()){
             for (int i = 0; i < action.mouseCodes.length; i++) {
@@ -247,6 +259,8 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         int wheelCode = e.getWheelRotation();
         wheelCode = wheelCode == -1 ? MOUSE_WHEEL_UP : wheelCode == 1 ? MOUSE_WHEEL_DOWN : wheelCode;
 
+        lastMouseWheelButtonReleased = wheelCode;
+
         for(Action action : inputActions.values()){
             for (int i = 0; i < action.mouseWheelCodes.length; i++) {
                 if(action.mouseWheelCodes[i] == wheelCode && !action.pressedKeys.contains(wheelCode) && 
@@ -277,6 +291,8 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
      * Method for when the mouse wheel isn't going up anymore.
      */
     protected static void mouseWheelUpReleased(){
+        lastMouseWheelButtonReleased = MOUSE_WHEEL_UP;
+
         for(Action action : inputActions.values()){
             for (int i = 0; i < action.mouseWheelCodes.length; i++) {
                 if(action.mouseWheelCodes[i] == MOUSE_WHEEL_UP && action.pressedKeys.contains(MOUSE_WHEEL_UP) && 
@@ -302,6 +318,8 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
      * Method for when the mouse wheel isn't going down anymore.
      */
     protected static void mouseWheelDownReleased(){
+        lastMouseWheelButtonReleased = MOUSE_WHEEL_DOWN;
+
         for(Action action : inputActions.values()){
             for (int i = 0; i < action.mouseWheelCodes.length; i++) {
                 if(action.mouseWheelCodes[i] == MOUSE_WHEEL_DOWN && action.pressedKeys.contains(MOUSE_WHEEL_DOWN) && 
@@ -557,6 +575,174 @@ public class Input implements KeyListener, MouseInputListener, MouseWheelListene
         return new Vector2(getAxis(negativeX, positiveX), getAxis(negativeY, positiveY));
     }
 
+    public static int getLastKeyPressed() {
+        return lastKeyPressed;
+    }
+
+    public static int getLastMouseButtonPressed() {
+        return lastMouseButtonPressed;
+    }
+
+    public static int getLastMouseWheelButtonPressed() {
+        return lastMouseWheelButtonPressed;
+    }
+
+    public static int getLastKeyReleased() {
+        return lastKeyReleased;
+    }
+
+    public static int getLastMouseButtonReleased() {
+        return lastMouseButtonReleased;
+    }
+
+    public static int getLastMouseWheelButtonReleased() {
+        return lastMouseWheelButtonReleased;
+    }
+
+    private static void resetAllActions(){
+        for (Action action : inputActions.values()) {
+            action.reset();
+        }
+        GraphicsPanel.actionsJustPressed.clear();
+        GraphicsPanel.actionsJustReleased.clear();
+        GraphicsPanel.wheelMovedUp = -1;
+        GraphicsPanel.wheelMovedDown = -1;
+    }
+
+    public static void removeAllCodesInAction(String name){
+        if (actionExist(name)) {
+            inputActions.get(name).removeAllCodes();
+        }
+        resetAllActions();
+    }
+
+    public static void addKeyboardCodeInAction(String name, int keyboardCode){
+        if (actionExist(name)) {
+            inputActions.get(name).addKeyboardCode(keyboardCode);
+        }
+        resetAllActions();
+    }
+
+    public static void addMouseCodeInAction(String name, int mouseCode){
+        if (actionExist(name)) {
+            inputActions.get(name).addMouseCode(mouseCode);
+        }
+        resetAllActions();
+    }
+
+    public static void addMouseWheelCodeInAction(String name, int mouseWheelCode){
+        if (actionExist(name)) {
+            inputActions.get(name).addMouseWheelCode(mouseWheelCode);
+        }
+        resetAllActions();
+    }
+
+    public static void removeKeyboardCodeInAction(String name, int keyboardCode){
+        if (actionExist(name)) {
+            inputActions.get(name).removeKeyboardCode(keyboardCode);
+        }
+        resetAllActions();
+    }
+
+    public static void removeMouseCodeInAction(String name, int mouseCode){
+        if (actionExist(name)) {
+            inputActions.get(name).removeMouseCode(mouseCode);
+        }
+        resetAllActions();
+    }
+
+    public static void removeMouseWheelCodeInAction(String name, int mouseWheelCode){
+        if (actionExist(name)) {
+            inputActions.get(name).removeMouseWheelCode(mouseWheelCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceKeyboardCodeToKeyboardCodeInAction(String name, int originalKeyboardCode, int newKeyboardCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceKeyboardCodeToKeyboardCode(originalKeyboardCode, newKeyboardCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceKeyboardCodeToMouseCodeInAction(String name, int originalKeyboardCode, int newMouseCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceKeyboardCodeToMouseCode(originalKeyboardCode, newMouseCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceKeyboardCodeToMouseWheelCodeInAction(String name, int originalKeyboardCode, int newMouseWheelCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceKeyboardCodeToMouseWheelCode(originalKeyboardCode, newMouseWheelCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseCodeToKeyboardCodeInAction(String name, int originalMouseCode, int newKeyboardCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseCodeToKeyboardCode(originalMouseCode, newKeyboardCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseCodeToMouseCodeInAction(String name, int originalMouseCode, int newMouseCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseCodeToMouseCode(originalMouseCode, newMouseCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseCodeToMouseWheelCodeInAction(String name, int originalMouseCode, int newMouseWheelCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseCodeToMouseWheelCode(originalMouseCode, newMouseWheelCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseWheelCodeToKeyboardCodeInAction(String name, int originalMouseWheelCode, int newKeyboardCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseWheelCodeToKeyboardCode(originalMouseWheelCode, newKeyboardCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseWheelCodeToMouseCodeInAction(String name, int originalMouseWheelCode, int newMouseCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseWheelCodeToMouseCode(originalMouseWheelCode, newMouseCode);
+        }
+        resetAllActions();
+    }
+
+    public static void replaceMouseWheelCodeToMouseWheelCodeInAction(String name, int originalMouseWheelCode, int newMouseWheelCode){
+        if (actionExist(name)) {
+            inputActions.get(name).replaceMouseWheelCodeToMouseWheelCode(originalMouseWheelCode, newMouseWheelCode);
+        }
+        resetAllActions();
+    }
+
+    public static int[] getKeyboardCodesInAction(String name){
+        if (actionExist(name)) {
+            return inputActions.get(name).keyboardCodes.clone();
+        }
+        return null;
+    }
+
+    public static int[] getMouseCodesInAction(String name){
+        if (actionExist(name)) {
+            return inputActions.get(name).mouseCodes.clone();
+        }
+        return null;
+    }
+
+    public static int[] getMouseWheelCodesInAction(String name){
+        if (actionExist(name)) {
+            return inputActions.get(name).mouseWheelCodes.clone();
+        }
+        return null;
+    }
+
+
 }
 
 /**
@@ -601,6 +787,257 @@ class Action{
             releasedKeys.add(i);
         }
         numberOfKeys = this.keyboardCodes.length + this.mouseCodes.length + this.mouseWheelCodes.length;
+    }
+
+    void reset(){
+        isPressed = false;
+        isReleased = false;
+        isJustPressed = false;
+        isJustReleased = false;
+        wasJustPressed = false;
+        wasJustReleased = false;
+        numberOfPressedKeys = 0;
+        numberOfReleasedKeys = 0;
+        pressedKeys.clear();
+        releasedKeys.clear();
+        for(int i : keyboardCodes){
+            releasedKeys.add(i);
+        }
+        for(int i : mouseCodes){
+            releasedKeys.add(i);
+        }
+        for(int i : mouseWheelCodes){
+            releasedKeys.add(i);
+        }
+        numberOfKeys = this.keyboardCodes.length + this.mouseCodes.length + this.mouseWheelCodes.length;
+    }
+
+    void removeAllCodes(){
+        reset();
+        numberOfKeys = 0;
+        releasedKeys.clear();
+        keyboardCodes = new int[0];
+        mouseCodes = new int[0];
+        mouseWheelCodes = new int[0];
+    }
+
+    void addKeyboardCode(int keyboardCode){
+        int[] temp = keyboardCodes/*.clone()*/;
+        keyboardCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length - 1; i++) {
+            keyboardCodes[i] = temp[i];
+        }
+        keyboardCodes[temp.length] = keyboardCode;
+    }
+
+    void addMouseCode(int mouseCode){
+        int[] temp = mouseCodes/*.clone()*/;
+        mouseCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length - 1; i++) {
+            mouseCodes[i] = temp[i];
+        }
+        mouseCodes[temp.length] = mouseCode;
+    }
+
+    void addMouseWheelCode(int mouseWheelCode){
+        int[] temp = mouseWheelCodes/*.clone()*/;
+        mouseWheelCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length - 1; i++) {
+            mouseWheelCodes[i] = temp[i];
+        }
+        mouseWheelCodes[temp.length] = mouseWheelCode;
+    }
+
+    void removeKeyboardCode(int keyboardCode){
+        int[] temp = keyboardCodes/*.clone()*/;
+        keyboardCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length - 1; i++) {
+            if(temp[i] == keyboardCode){
+                jumped++;
+                continue;
+            }
+            keyboardCodes[i - jumped] = temp[i];
+        }
+    }
+
+    void removeMouseCode(int mouseCode){
+        int[] temp = mouseCodes/*.clone()*/;
+        mouseCodes = new int[temp.length + 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length - 1; i++) {
+            if(temp[i] == mouseCode){
+                jumped++;
+                continue;
+            }
+            mouseCodes[i - jumped] = temp[i];
+        }
+    }
+
+    void removeMouseWheelCode(int mouseWheelCode){
+        int[] temp = mouseWheelCodes/*.clone()*/;
+        mouseWheelCodes = new int[temp.length + 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length - 1; i++) {
+            if(temp[i] == mouseWheelCode){
+                jumped++;
+                continue;
+            }
+            mouseWheelCodes[i - jumped] = temp[i];
+        }
+    }
+
+    // REPLACE FROM KEYBOARD CODE
+
+    void replaceKeyboardCodeToKeyboardCode(int originalKeyboardCode, int newKeyboardCode){
+        for (int i = 0; i < keyboardCodes.length; i++) {
+            if (keyboardCodes[i] == originalKeyboardCode) {
+                keyboardCodes[i] = newKeyboardCode;
+                break;
+            }
+        }
+    }
+
+    void replaceKeyboardCodeToMouseCode(int originalKeyboardCode, int newMouseCode){
+        int[] temp = keyboardCodes;
+        keyboardCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalKeyboardCode){
+                jumped++;
+                continue;
+            }
+            keyboardCodes[i - jumped] = temp[i];
+        }
+
+        temp = mouseCodes;
+        mouseCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            mouseCodes[i] = temp[i];
+        }
+        mouseCodes[mouseCodes.length - 1] = newMouseCode;
+    }
+
+    void replaceKeyboardCodeToMouseWheelCode(int originalKeyboardCode, int newMouseWheelCode){
+        int[] temp = keyboardCodes;
+        keyboardCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalKeyboardCode){
+                jumped++;
+                continue;
+            }
+            keyboardCodes[i - jumped] = temp[i];
+        }
+        
+        temp = mouseWheelCodes;
+        mouseWheelCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            mouseWheelCodes[i] = temp[i];
+        }
+        mouseWheelCodes[mouseWheelCodes.length - 1] = newMouseWheelCode;
+    }
+
+    // REPLACE FROM MOUSE CODE
+
+    void replaceMouseCodeToKeyboardCode(int originalMouseCode, int newKeyboardCode){
+        int[] temp = mouseCodes;
+        mouseCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalMouseCode){
+                jumped++;
+                continue;
+            }
+            mouseCodes[i - jumped] = temp[i];
+        }
+
+        temp = keyboardCodes;
+        keyboardCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            keyboardCodes[i] = temp[i];
+        }
+        keyboardCodes[keyboardCodes.length - 1] = newKeyboardCode;
+    }
+
+    void replaceMouseCodeToMouseCode(int originalMouseCode, int newMouseCode){
+        for (int i = 0; i < mouseCodes.length; i++) {
+            if (mouseCodes[i] == originalMouseCode) {
+                mouseCodes[i] = newMouseCode;
+                break;
+            }
+        }
+    }
+
+    void replaceMouseCodeToMouseWheelCode(int originalMouseCode, int newMouseWheelCode){
+        int[] temp = mouseCodes;
+        mouseCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalMouseCode){
+                jumped++;
+                continue;
+            }
+            mouseCodes[i - jumped] = temp[i];
+        }
+        
+        temp = mouseWheelCodes;
+        mouseWheelCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            mouseWheelCodes[i] = temp[i];
+        }
+        mouseWheelCodes[mouseWheelCodes.length - 1] = newMouseWheelCode;
+    }
+
+    // REPLACE FROM MOUSE WHEEL CODE
+
+    void replaceMouseWheelCodeToKeyboardCode(int originalMouseWheelCode, int newKeyboardCode){
+        int[] temp = mouseWheelCodes;
+        mouseWheelCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalMouseWheelCode){
+                jumped++;
+                continue;
+            }
+            mouseWheelCodes[i - jumped] = temp[i];
+        }
+
+        temp = keyboardCodes;
+        keyboardCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            keyboardCodes[i] = temp[i];
+        }
+        keyboardCodes[keyboardCodes.length - 1] = newKeyboardCode;
+    }
+
+    void replaceMouseWheelCodeToMouseCode(int originalMouseWheelCode, int newMouseCode){
+        int[] temp = mouseWheelCodes;
+        mouseWheelCodes = new int[temp.length - 1];
+        int jumped = 0;
+        for (int i = 0; i < temp.length; i++) {
+            if(temp[i] == originalMouseWheelCode){
+                jumped++;
+                continue;
+            }
+            mouseWheelCodes[i - jumped] = temp[i];
+        }
+        
+        temp = mouseCodes;
+        mouseCodes = new int[temp.length + 1];
+        for (int i = 0; i < temp.length; i++) {
+            mouseCodes[i] = temp[i];
+        }
+        mouseCodes[mouseCodes.length - 1] = newMouseCode;
+    }
+
+    void replaceMouseWheelCodeToMouseWheelCode(int originalMouseWheelCode, int newMouseWheelCode){
+        for (int i = 0; i < mouseCodes.length; i++) {
+            if (mouseCodes[i] == originalMouseWheelCode) {
+                mouseCodes[i] = newMouseWheelCode;
+                break;
+            }
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -38,6 +39,8 @@ public class Player extends GraphicsItemAuto {
     Line2 enemyLine = new Line2(300, 100, 400, 200);
     Rect2 enemyRect = new Rect2(300, 300, 50, 50);
     Circle2 enemyCircle = new Circle2(300, 300, 100);
+
+    boolean oneTime = true;
 
     // Ball ball = new Ball();
 
@@ -89,6 +92,12 @@ public class Player extends GraphicsItemAuto {
             free();
         }
 
+        if (Input.isActionJustPressed("null") && oneTime) {
+            oneTime = false;
+            System.out.println("pow");
+            Input.replaceMouseWheelCodeToKeyboardCodeInAction("Move Up", Input.MOUSE_WHEEL_UP, KeyEvent.VK_SPACE);
+        }
+
         double fps = GraphicsPanel.getCurrentFps();
         if(fps > highest_fps){
             highest_fps = fps;
@@ -106,7 +115,7 @@ public class Player extends GraphicsItemAuto {
         g2.drawString("Highest FPS: " + Integer.toString(Math.round((float) highest_fps)), 0, 40);
         g2.drawString("Lowest FPS: " + Integer.toString(Math.round((float) lowest_fps)), 0, 60);
 
-        playerLine.start = position;
+        playerLine.start = position.sum(size.div(2));
         playerRect.position = position;
         playerCircle.position = position.sum(new Vector2(playerCircle.radius, playerCircle.radius));
 
@@ -122,11 +131,11 @@ public class Player extends GraphicsItemAuto {
         g2.setColor(Color.BLACK);
         
         g2.setColor(Color.BLUE);
-        System.out.println(playerLine.collideWith(enemyCircle));
-        // Vector2 collisionPoint = playerLine.collisionPoint(enemyCircle);
-        // if (collisionPoint != null) {
-        //     fillCircle(new Circle2(collisionPoint, 3), g2);
-        // }
+        // System.out.println(playerLine.collideWith(enemyCircle));
+        Vector2 collisionPoint = playerLine.collisionPoint(enemyCircle);
+        if (collisionPoint != null) {
+            fillCircle(new Circle2(collisionPoint, 3), g2);
+        }
     }
 
     public void timeout(){

@@ -25,6 +25,8 @@ public class Main{
         Input.createNewAction("Destroy", new int[]{KeyEvent.VK_BACK_SPACE}, null, null);
         Input.createNewAction("Destroy All", new int[]{KeyEvent.VK_DELETE}, null, null);
 
+        Input.createNewAction("null", new int[]{KeyEvent.VK_SPACE}, null, null);
+
         window = Window.getInstance("Framework do Paraguai");
 
         gPanel = GraphicsPanel.getInstance(800, 600, true, "src");
@@ -35,9 +37,12 @@ public class Main{
 
         gPanel.start();
 
-        //TODO BUGS IN LINE COLLISION WITH CIRCLE
         //TODO COMMENT LINE CLASS, AND ABOUT ALL THE GEOM CLASSES
         //TODO FINISH COMMENTING VECTOR2
+
+        //TODO PAUSE INPUT
+
+        //TODO RECOMMENT CLASS "INPUT"
 
     }
 

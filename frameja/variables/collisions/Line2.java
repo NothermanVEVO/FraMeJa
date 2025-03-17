@@ -75,16 +75,10 @@ public class Line2 extends Geom2 {
     // https://mathworld.wolfram.com/Circle-LineIntersection.html
     @Override
     public boolean collideWith(Circle2 circle) {
-        Line2 nLine = new Line2(start.sub(circle.position), end.sub(circle.position));
-
-        double dx = nLine.end.x - nLine.start.x;
-        double dy = nLine.end.y - nLine.start.y;
-        double dr = Math.pow(dx, 2) + Math.pow(dy, 2);
-        double d = (nLine.start.x * nLine.end.y) - (nLine.start.y * nLine.end.x);
-
-        double delta = (Math.pow(circle.radius, 2) * dr) - Math.pow(d, 2);
-
-        return delta >= 0;
+        if(circle.collideWith(start) || circle.collideWith(end)){
+            return true;
+        }
+        return collisionPoint(circle) != null;
     }
 
     @Override
@@ -156,11 +150,13 @@ public class Line2 extends Geom2 {
         }
     }
 
-    /**
-     * BUGS!!
-     */
-    // https://mathworld.wolfram.com/Circle-LineIntersection.html
+    // ADDAPTED: https://mathworld.wolfram.com/Circle-LineIntersection.html
     public Vector2 collisionPoint(Circle2 circle){
+        // To prevent a case where occur a division by zero.
+        if (start.equal(end)) {
+            return null;
+        }
+
         Line2 nLine = new Line2(start.sub(circle.position), end.sub(circle.position));
 
         double dx = nLine.end.x - nLine.start.x;
@@ -178,23 +174,43 @@ public class Line2 extends Geom2 {
         Vector2 p2 = new Vector2();
 
         int sgn = dy < 0 ? -1 : 1;
+        
+        double sqrtDelta = Math.sqrt(delta);
 
-        p1.x = ((d * dy) - (sgn * dx) * Math.sqrt(delta)) / dr;
-        p1.y = ((-d * dx) - (Math.abs(dy) * Math.sqrt(delta))) / dr;
+        p1.x = ((d * dy) - (sgn * dx) * sqrtDelta) / dr;
+        p1.y = ((-d * dx) - (Math.abs(dy) * sqrtDelta)) / dr;
 
-        p2.x = ((d * dy) + (sgn * dx) * Math.sqrt(delta)) / dr;
-        p2.y = ((-d * dx) + (Math.abs(dy) * Math.sqrt(delta))) / dr;
+        p2.x = ((d * dy) + (sgn * dx) * sqrtDelta) / dr;
+        p2.y = ((-d * dx) + (Math.abs(dy) * sqrtDelta)) / dr;
 
         p1 = p1.sum(circle.position);
         p2 = p2.sum(circle.position);
 
-        return p1.distanceSquaredTo(start) < p2.distanceSquaredTo(start) ? p1 : p2;
+        // Those previous lines are a formula for a infinite line
+        // Now, we check if they are within the segment.
+
+        if (!withinSegment(p1) && !withinSegment(p2)){
+            return null;
+        }
+
+        // If the start point is inside the circle, then will calculate the distance based on the end point, 
+        // case the start point is outside, it will calculate based in the start point.
+        if (circle.collideWith(start)) {
+            return p1.distanceSquaredTo(end) < p2.distanceSquaredTo(end) ? p1 : p2;
+        } else{
+            return p1.distanceSquaredTo(start) < p2.distanceSquaredTo(start) ? p1 : p2;
+        }
 
     }
 
     public Vector2 collisionPoint(Poly2 poly){
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'collisionPoint'");
+    }
+
+    private boolean withinSegment(Vector2 vct) {
+        return Math.min(start.x, end.x) <= vct.x && vct.x <= Math.max(start.x, end.x) &&
+               Math.min(start.y, end.y) <= vct.y && vct.y <= Math.max(start.y, end.y);
     }
     
 }
