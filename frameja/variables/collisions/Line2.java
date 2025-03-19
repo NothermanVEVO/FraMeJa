@@ -2,23 +2,45 @@ package frameja.variables.collisions;
 
 import frameja.variables.Vector2;
 
+/**
+ * A class that represents the line.
+ */
 public class Line2 extends Geom2 {
 
+    // The start coordinate of the line.
     public Vector2 start;
+
+    // The end coordinate of the line
     public Vector2 end;
 
+    // Epsilon value.
     private static final double EPSILON = 0.001f;
 
+    /**
+     * Create a line.
+     */
     public Line2(){
         start = new Vector2();
         end = new Vector2();
     }
 
+    /**
+     * Create a line based in the positions.
+     * @param x1 The start position x.
+     * @param y1 The start position y.
+     * @param x2 The end position x.
+     * @param y2 The end position y.
+     */
     public Line2(double x1, double y1, double x2, double y2){
         start = new Vector2(x1, y1);
         end = new Vector2(x2, y2);
     }
 
+    /**
+     * Create a line based in the coordinates.
+     * @param start The start position.
+     * @param end The end position.
+     */
     public Line2(Vector2 start, Vector2 end){
         this.start = start;
         this.end = end;
@@ -68,11 +90,11 @@ public class Line2 extends Geom2 {
     }
 
     /**
-     * Check if the line contains or intersect with a circle.
+     * Check if the line contains or intersect with a circle.<p>
+     * Adapted from the site: https://mathworld.wolfram.com/Circle-LineIntersection.html.
      * @param circle The {@link Circle2}.
      * @return {@code true} if the line contains or intersect with a circle, {@code false} otherwise.
      */
-    // https://mathworld.wolfram.com/Circle-LineIntersection.html
     @Override
     public boolean collideWith(Circle2 circle) {
         if(circle.collideWith(start) || circle.collideWith(end)){
@@ -87,6 +109,11 @@ public class Line2 extends Geom2 {
         throw new UnsupportedOperationException("Unimplemented method 'colideWith'");
     }
 
+    /**
+     * Gets the collision point from a line.
+     * @param line The line.
+     * @return {@code Vector2} if they are colliding, return {@code null} otherwise.
+     */
     public Vector2 collisionPoint(Line2 line){
         float uA = (float) (((line.end.x - line.start.x) * (start.y - line.start.y) - (line.end.y - line.start.y) * 
             (start.x - line.start.x)) / ((line.end.y - line.start.y) * (end.x - start.x) - 
@@ -103,6 +130,11 @@ public class Line2 extends Geom2 {
         return null;
     }
 
+    /**
+     * Gets the collision point from a rectangle.
+     * @param rect The rectangle.
+     * @return {@code Vector2} if they are colliding, return {@code null} otherwise.
+     */
     public Vector2 collisionPoint(Rect2 rect){
         Line2 left = new Line2(rect.position.x, rect.position.y, rect.position.x, 
                                 rect.position.y + rect.size.y);
@@ -150,7 +182,12 @@ public class Line2 extends Geom2 {
         }
     }
 
-    // ADDAPTED: https://mathworld.wolfram.com/Circle-LineIntersection.html
+    /**
+     * Gets the collision point from a circle.<p>
+     * Adapted from the site: https://mathworld.wolfram.com/Circle-LineIntersection.html.
+     * @param circle The circle
+     * @return {@code Vector2} if there's collision, {@code null} if there's no collision.
+     */
     public Vector2 collisionPoint(Circle2 circle){
         // To prevent a case where occur a division by zero.
         if (start.equal(end)) {

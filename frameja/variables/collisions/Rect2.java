@@ -2,21 +2,42 @@ package frameja.variables.collisions;
 
 import frameja.variables.Vector2;
 
+/**
+ * A class that represents the rectangle.
+ */
 public class Rect2 extends Geom2 {
 
+    // The position of the rectangle.
     public Vector2 position;
+
+    // The size of the rectangle.
     public Vector2 size;
 
+    /**
+     * Creates a rectangle.
+     */
     public Rect2(){
         position = new Vector2();
         size = new Vector2();
     }
 
+    /**
+     * Creates a rectangle based in the position and the size.
+     * @param x The coordinate x.
+     * @param y The coordinate y.
+     * @param width The width.
+     * @param height The height.
+     */
     public Rect2(double x, double y, double width, double height){
         position = new Vector2(x, y);
         size = new Vector2(width, height);
     }
 
+    /**
+     * Creates a rectangle based in the position and the size.
+     * @param position The position.
+     * @param size The size.
+     */
     public Rect2(Vector2 position, Vector2 size){
         this.position = position;
         this.size = size;

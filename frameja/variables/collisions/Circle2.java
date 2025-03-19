@@ -2,9 +2,15 @@ package frameja.variables.collisions;
 
 import frameja.variables.Vector2;
 
+/**
+ * A class that represents the circle.
+ */
 public class Circle2 extends Geom2 {
 
+    // The position of the center.
     public Vector2 position;
+
+    // The radius.
     public double radius;
 
     /**
